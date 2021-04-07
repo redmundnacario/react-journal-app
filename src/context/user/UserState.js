@@ -3,18 +3,26 @@ import { useReducer } from "react";
 import UserContext from "./userContext";
 import UserReducer from "./userReducer";
 
-import { SET_USER, CLEAR_USER, SET_LOADING } from "../types";
+import { SET_USER,
+         CLEAR_USER, 
+         SET_LOADING,
+         SET_MESSAGE,
+         CLEAR_MESSAGE
+         } from "../types";
 
 import url from '../url';
 
 const UserState = (props) => {
     const initialState = {
         user: {},
-        isLoading: false
+        isLoading: false,
+        message: {},
     };
+
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
+    
     const logInUser = async (data) => {
         setIsLoading();
         console.log(process.env.NODE_ENV)
@@ -42,7 +50,14 @@ const UserState = (props) => {
             type: SET_USER,
             payload: result
         })
+
+        const {status, message} = result
+        dispatch({
+            type: SET_MESSAGE,
+            payload: {status, message} 
+        })
     };
+
 
     const signUpUser = async (data) => {
         setIsLoading();
@@ -64,22 +79,22 @@ const UserState = (props) => {
         }
 
         const result = await res.json();
+        console.log(res.status);
+        console.log(result);
+        
+        dispatch({
+            type: SET_USER,
+            payload: result
+        })
 
-        if (res.status === 200) {
-            alert("Account successfully created");
-            console.log(res.status);
-            console.log(result);
-
-            dispatch({
-                type: SET_USER,
-                payload: result
-            })
-        } else {
-            alert("Unsuccessful account creation");
-            console.log(res.status);
-            console.log(result);
-        }
+        const {status, message} = result
+        dispatch({
+            type: SET_MESSAGE,
+            payload: {status, message}
+        })
+        
     };
+
 
     const logOutUser = () => {
         setIsLoading();
@@ -88,22 +103,40 @@ const UserState = (props) => {
             type: CLEAR_USER
         })
         // reroute to home
+
+        const result = {
+            status: "Success",
+            message: "User Logged out."
+        }
+        dispatch({
+            type: SET_MESSAGE,
+            payload: result
+        })
     };
+
 
     // set loading to true
     const setIsLoading = () => {
         dispatch({ type: SET_LOADING });
     };
 
+
+    const clearMessage = () => {
+        dispatch({type: CLEAR_MESSAGE})
+    }
+
+
     return(
         <UserContext.Provider
         value = {{
             user : state.user,
             isLoading : state.isLoading,
+            message: state.message,
             logInUser,
             signUpUser,
             logOutUser,
-            setIsLoading
+            setIsLoading,
+            clearMessage
         }}
         >
             {props.children}

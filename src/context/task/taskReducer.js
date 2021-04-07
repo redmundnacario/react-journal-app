@@ -1,23 +1,24 @@
 import {
-    SET_USER,
-    CLEAR_USER,
+    SET_TASKS,
+    SET_TASK,
     SET_LOADING,
     SET_MESSAGE,
     CLEAR_MESSAGE
 } from '../types'
 
-const UserReducer = (state, action) =>{
+
+const TaskReducer = (state, action) =>{
     switch(action.type){
-        case SET_USER:
+        case SET_TASKS:
             return {
                 ...state,
-                user: action.payload,
+                tasks: action.payload,
                 isLoading: false
             }
-        case CLEAR_USER:
+        case SET_TASK:
             return {
                 ...state,
-                user: {},
+                task: action.payload,
                 isLoading: false
             }
         case SET_MESSAGE:
@@ -37,9 +38,9 @@ const UserReducer = (state, action) =>{
                 ...state,
                 isLoading: true
             }
-        default :
-            return state;
+        default:
+            return state
     }
 }
 
-export default UserReducer
+export default TaskReducer
