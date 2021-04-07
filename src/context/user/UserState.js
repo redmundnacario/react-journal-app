@@ -5,25 +5,19 @@ import UserReducer from "./userReducer";
 
 import { SET_USER, CLEAR_USER, SET_LOADING } from "../types";
 
-let url;
-
-if (process.env.NODE_ENV !== "production") {
-    url = process.env.REACT_APP_ROUTE;
-} else {
-    url = process.env.REACT_APP_ROUTE;
-}
+import url from '../url';
 
 const UserState = (props) => {
     const initialState = {
         user: {},
-        isLoading: false,
+        isLoading: false
     };
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
     const logInUser = async (data) => {
         setIsLoading();
-
+        console.log(process.env.NODE_ENV)
         console.log("login function");
         console.log(data);
 
@@ -41,22 +35,13 @@ const UserState = (props) => {
         }
 
         const result = await res.json();
+        console.log(res.status);
+        console.log(result);
 
-        if (res.status === 200) {
-            alert("Successfully logged in.");
-            console.log(res.status);
-            console.log(result);
-
-            dispatch({
-                type: SET_USER,
-                payload: result
-            })
-        
-        } else {
-            alert("Unsuccessful login.");
-            console.log(res.status);
-            console.log(result);
-        }
+        dispatch({
+            type: SET_USER,
+            payload: result
+        })
     };
 
     const signUpUser = async (data) => {

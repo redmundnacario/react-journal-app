@@ -1,10 +1,15 @@
 import React, {useState, useContext} from 'react'
-import {Container, Row, Col, Form, Button, Card} from 'react-bootstrap'
+import {Container, Row, Col, Form, Button as ButtonB, Card} from 'react-bootstrap'
 
+
+import Button from '../../shared/button/button.component'
+
+import AlertContext from '../../../context/alert/alertContext'
 import UserContext from '../../../context/user/userContext'
 
 const SignIn = () => {
 
+    const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
 
     const {user, isLoading, logInUser} = userContext
@@ -12,10 +17,25 @@ const SignIn = () => {
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
 
-    const handleSubmit = (e, data) =>{
+    const handleSubmit = async(e, data) =>{
         e.preventDefault()
-        logInUser(data)
+        await logInUser(data)
+            .then(()=>{
+                if (user.status){
+                    alertContext.setAlert({title: user.status, message: user.message})
+                    // Reroute to Dashboard
+                } 
+            })
     }
+
+    const button_props = {
+        variant: "primary",
+        text: "Sign In",
+        type: "submit"
+    }
+
+    // i: (<i className="fas fa-door-open"></i>)
+
     return (
         <Container>
             <Row className="mt-5">
@@ -46,10 +66,10 @@ const SignIn = () => {
                                         required
                                     />
                                 </Form.Group>
-                                
-                                <Button variant="primary" type="submit" onClick={null}>
-                                    Sign-In  <i className="fas fa-door-open"></i>
-                                </Button>
+                                <Button
+                                    {...button_props}
+                                    isLoading = {isLoading}
+                                />
                             </Form>
                         </Card.Body>
                     </Card>
