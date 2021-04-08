@@ -105,7 +105,7 @@ const UserState = (props) => {
     };
 
 
-    const logOutUser = () => {
+    const logOutUser = (cb) => {
         setIsLoading();
 
         dispatch({
@@ -122,6 +122,8 @@ const UserState = (props) => {
             type: SET_MESSAGE,
             payload: result
         })
+
+        cb(result, 200)
     };
 
 

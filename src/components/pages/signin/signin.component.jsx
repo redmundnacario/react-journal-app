@@ -22,7 +22,7 @@ const SignIn = () => {
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
   
-    const reRoute = () => history.push("/")
+    const reRoute = () => history.push("/journals")
 
     const handleSubmit = (e, data) =>{
         e.preventDefault()

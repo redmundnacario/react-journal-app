@@ -1,14 +1,37 @@
 import React, {useContext, Fragment} from 'react'
-import {Link} from 'react-router-dom'
+import { useHistory, withRouter, Link } from 'react-router-dom'
+
 import { Navbar as NavbarB, Nav} from 'react-bootstrap'
 
 //context
+import AlertContext from '../../../context/alert/alertContext'
 import UserContext from '../../../context/user/userContext'
 
 const Navbar = () => {
 
+    const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
-    const {token} = userContext
+    const history = useHistory();
+
+    const {token, logOutUser} = userContext
+
+    const reRoute = () => history.push("/")
+
+
+    const handleClick = () => {
+        console.log("logout clicked")
+        logOutUser(setAlertReRoute)
+    }
+
+    const setAlertReRoute = (message, statusCode) => {
+        if (message){
+            alertContext.setAlert({title: message.status, message: message.message})
+        }
+
+        if (statusCode === 200){
+            reRoute()
+        }
+    }
 
     return (
        
@@ -24,7 +47,7 @@ const Navbar = () => {
                             <Nav.Link as={Link} to="/journals">Journals</Nav.Link>
                             <Nav.Link as={Link} to="/tasks">Tasks</Nav.Link>
                             <Nav.Link as={Link} to="/account">Account</Nav.Link>
-                            <Nav.Link>Logout</Nav.Link>
+                            <Nav.Link onClick={()=>handleClick()}>Logout</Nav.Link>
                         </Fragment>
                         :
                         <Fragment>
@@ -42,4 +65,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default withRouter(Navbar)
