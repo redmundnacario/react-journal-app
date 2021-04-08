@@ -1,6 +1,6 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useState, useContext} from 'react'
 import {Container, Row, Col, Form, Card} from 'react-bootstrap'
-import {useHistory} from 'react-router-dom'
+import { useHistory, withRouter } from 'react-router-dom'
 
 import Button from '../../shared/button/button.component'
 
@@ -11,28 +11,33 @@ const SignIn = () => {
 
     const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
+    const history = useHistory();
 
-    const {user, message, isLoading, logInUser} = userContext
+    const {token, isLoading, logInUser} = userContext
+
+    if (token){
+        history.push("/journals")
+    }
 
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
   
+    const reRoute = () => history.push("/")
+
     const handleSubmit = (e, data) =>{
         e.preventDefault()
-        logInUser(data)
+        logInUser(data, setAlertReRoute)
     }       
 
-
-    useEffect(()=>{
-
-        if(user){
-            alertContext.setAlert({title: user.status, message: user.message})
-            <Redirect to='/'/>;
-        } else if (message){
+    const setAlertReRoute = (message, statusCode) => {
+        if (message){
             alertContext.setAlert({title: message.status, message: message.message})
         }
-        // eslint-disable-next-line
-    },[user, message])
+
+        if (statusCode === 200){
+            reRoute()
+        }
+    }
 
     const button_props = {
         variant: "primary",
@@ -85,4 +90,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default withRouter(SignIn)

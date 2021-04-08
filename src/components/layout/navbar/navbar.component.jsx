@@ -1,8 +1,15 @@
-import React from 'react'
+import React, {useContext, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import { Navbar as NavbarB, Nav} from 'react-bootstrap'
 
+//context
+import UserContext from '../../../context/user/userContext'
+
 const Navbar = () => {
+
+    const userContext = useContext(UserContext)
+    const {token} = userContext
+
     return (
        
         <NavbarB collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -11,9 +18,21 @@ const Navbar = () => {
                 <NavbarB.Toggle aria-controls="responsive-navbar-nav" />
                 <NavbarB.Collapse id="responsive-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link as={Link} to="/about">About</Nav.Link>
-                        <Nav.Link as={Link} to="/signup"><i className="fas fa-user-plus"></i> SignUp</Nav.Link>
-                        <Nav.Link as={Link} to="/signin"><i className="fas fa-sign-in-alt"></i> SignIn</Nav.Link>
+                    {
+                        token ?
+                        <Fragment>
+                            <Nav.Link as={Link} to="/journals">Journals</Nav.Link>
+                            <Nav.Link as={Link} to="/tasks">Tasks</Nav.Link>
+                            <Nav.Link as={Link} to="/account">Account</Nav.Link>
+                            <Nav.Link>Logout</Nav.Link>
+                        </Fragment>
+                        :
+                        <Fragment>
+                            <Nav.Link as={Link} to="/about">About</Nav.Link>
+                            <Nav.Link as={Link} to="/signup">SignUp</Nav.Link>
+                            <Nav.Link as={Link} to="/signin">SignIn</Nav.Link>
+                        </Fragment>
+                    }
                     </Nav>
                 </NavbarB.Collapse>
             

@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 
 import UserContext from "./userContext";
 import UserReducer from "./userReducer";
@@ -13,15 +13,23 @@ import url from '../url';
 const UserState = (props) => {
     const initialState = {
         user: null,
+        token : null,
         isLoading: false,
         message: null,
     };
 
 
-    const [state, dispatch] = useReducer(UserReducer, initialState);
+    const [state, dispatch] = useReducer(UserReducer, initialState, () =>{
+        const tokenLocal = localStorage.getItem('token')
+        return tokenLocal ? {...initialState, token: JSON.parse(tokenLocal)} : null
+    });
 
+    useEffect(()=>{
+        localStorage.setItem('token',JSON.stringify(state.token))
+        // eslint-disable-next-line
+    }, [state.token])
     
-    const logInUser = async (data) => {
+    const logInUser = async (data, cb) => {
         setIsLoading();
         console.log(process.env.NODE_ENV)
         console.log("login function");
@@ -47,18 +55,21 @@ const UserState = (props) => {
         const {status, message} = result
         console.log(status ,message)
 
-        if (res === 200){
+        if (res.status === 200){
+
             dispatch({
                 type: SET_USER,
                 payload: result
             })
-        } else {
-            setMessage({status, message})
         }
+        
+        setMessage({status, message})
+
+        cb({status, message}, res.status)
     };
 
 
-    const signUpUser = async (data) => {
+    const signUpUser = async (data, cb) => {
         setIsLoading();
 
         console.log("signup function");
@@ -78,21 +89,19 @@ const UserState = (props) => {
         }
 
         const result = await res.json();
+        const {status, message} = result
         console.log(res.status);
         console.log(result);
         
-        if (res === 200){
-            dispatch({
-                type: SET_USER,
-                payload: result
-            })
-        } else {
-            const {status, message} = result
-            dispatch({
-                type: SET_MESSAGE,
-                payload: {status, message}
-            })
-        }
+
+        dispatch({
+            type: SET_USER,
+            payload: result.data? result : null
+        })
+        
+        setMessage({status, message})
+
+        cb({status, message}, res.status)
     };
 
 
@@ -101,7 +110,7 @@ const UserState = (props) => {
 
         dispatch({
             type: SET_USER,
-            payload : null
+            payload : {user: null, token: null}
         })
         // reroute to home
 
@@ -135,6 +144,7 @@ const UserState = (props) => {
         <UserContext.Provider
         value = {{
             user : state.user,
+            token: state.token,
             isLoading : state.isLoading,
             message: state.message,
             logInUser,

@@ -6,12 +6,15 @@ import About from './components/pages/about.component'
 import NotFound from './components/pages/notfound.component'
 import SignUp from './components/pages/signup/signup.component'
 import SignIn from './components/pages/signin/signin.component'
-
 import AlertContainer from './components/shared/alert/alert-container.component'
 
-import AlertState from './context/alert/AlertState';
+// state
+import AlertState from './context/alert/AlertState'
+
 
 function App() {
+  
+
   return (
     <AlertState>
       <Router>

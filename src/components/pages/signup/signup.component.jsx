@@ -1,6 +1,6 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useState, useContext} from 'react'
 import {Container, Row, Col, Form, Card} from 'react-bootstrap'
-
+import { useHistory, withRouter } from 'react-router-dom'
 
 import Button from '../../shared/button/button.component'
 
@@ -12,14 +12,21 @@ const SignUp = () => {
 
     const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
+    const history = useHistory();
 
-    const {user, message, isLoading, signUpUser} = userContext
+    const {token, isLoading, signUpUser} = userContext
+
+    if (token){
+        history.push("/journals")
+    }
 
     const [email, setEmail] = useState(null)
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState(null)
     
+    const reRoute = () => history.push("/")
+
     const handleSubmit = (e, data) =>{
         e.preventDefault()
         if (data.password !== data.confirmPassword){
@@ -30,19 +37,21 @@ const SignUp = () => {
                 username: data.username,
                 password: data.password,
                 email: data.email
-            })
+            },
+                setAlertReRoute
+            )
         }
     }
 
-    useEffect(()=>{
-
-        if(user){
-            alertContext.setAlert({title: user.status, message: user.message})
-        } else if (message){
+    const setAlertReRoute = (message, statusCode) => {
+        if (message){
             alertContext.setAlert({title: message.status, message: message.message})
         }
-        // eslint-disable-next-line
-    },[user, message])
+
+        if (statusCode === 200){
+            reRoute()
+        }
+    }
 
     const button_props = {
         variant: "primary",
@@ -114,4 +123,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp
+export default withRouter(SignUp)
