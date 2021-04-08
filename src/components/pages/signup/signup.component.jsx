@@ -1,12 +1,19 @@
-import React, {useState, useContext} from 'react'
-import {Container, Row, Col, Form, Button, Card} from 'react-bootstrap'
+import React, {useState, useContext, useEffect} from 'react'
+import {Container, Row, Col, Form, Card} from 'react-bootstrap'
+
+
+import Button from '../../shared/button/button.component'
+
 
 import UserContext from '../../../context/user/userContext'
+import AlertContext from '../../../context/alert/alertContext'
 
 const SignUp = () => {
 
+    const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
-    const {user, isLoading, signUpUser} = userContext
+
+    const {user, message, isLoading, signUpUser} = userContext
 
     const [email, setEmail] = useState(null)
     const [username, setUsername] = useState(null)
@@ -17,7 +24,7 @@ const SignUp = () => {
         e.preventDefault()
         if (data.password !== data.confirmPassword){
             // set alert passwords did not match
-            console.log("passwords did not matched.")
+            alertContext.setAlert({title: "Error", message: "Passwords did not match."})
         } else {
             signUpUser({
                 username: data.username,
@@ -26,6 +33,23 @@ const SignUp = () => {
             })
         }
     }
+
+    useEffect(()=>{
+
+        if(user){
+            alertContext.setAlert({title: user.status, message: user.message})
+        } else if (message){
+            alertContext.setAlert({title: message.status, message: message.message})
+        }
+        // eslint-disable-next-line
+    },[user, message])
+
+    const button_props = {
+        variant: "primary",
+        text: "Sign Up",
+        type: "submit"
+    }
+
 
     return (
         <Container>
@@ -77,9 +101,10 @@ const SignUp = () => {
                                     />
                                 </Form.Group>
                                 
-                                <Button variant="primary" type="submit" onClick={null}>
-                                    <i className="fas fa-user-plus"></i> Sign Up
-                                </Button>
+                                <Button
+                                    {...button_props}
+                                    isLoading = {isLoading}
+                                />
                             </Form>
                         </Card.Body>
                     </Card>

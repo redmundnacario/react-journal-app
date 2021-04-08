@@ -2,8 +2,7 @@ import {
     SET_JOURNALS,
     SET_JOURNAL,
     SET_LOADING,
-    SET_MESSAGE,
-    CLEAR_MESSAGE
+    SET_MESSAGE
 } from '../types'
 
 
@@ -25,12 +24,6 @@ const JournalReducer = (state, action) =>{
             return {
                 ...state,
                 message: action.payload,
-                isLoading: false
-            }
-        case CLEAR_MESSAGE:
-            return {
-                ...state,
-                message: {},
                 isLoading: false
             }
         case SET_LOADING:

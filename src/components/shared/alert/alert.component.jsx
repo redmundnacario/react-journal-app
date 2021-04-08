@@ -23,7 +23,6 @@ const Toast = ({message, title}) => {
         <ToastB className="toasty" style={{zIndex:10, minWidth: '200px'}} show={showToast} delay={3000} onClose={toggleShow} autohide>
             <ToastB.Header>
                 <strong className="mr-auto">{title}</strong>
-                {message}
             </ToastB.Header>
             <ToastB.Body>{message}</ToastB.Body>
         </ToastB>

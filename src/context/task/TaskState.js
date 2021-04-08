@@ -7,8 +7,7 @@ import {
     SET_TASKS,
     SET_TASK,
     SET_LOADING,
-    SET_MESSAGE,
-    CLEAR_MESSAGE,
+    SET_MESSAGE
 } from '../types'
 
 import url from '../url';
@@ -16,9 +15,9 @@ import url from '../url';
 const TaskState = (props) => {
     const initialState = {
         tasks : [],
-        task : {},
+        task : null,
         isLoading : false,
-        message : {}
+        message : null
     }
 
     
@@ -133,14 +132,12 @@ const TaskState = (props) => {
                         },
                         body: JSON.stringify(data),
                       })
-    
-        // const data = await res.json()
 
         if (res.status === 200){
             console.log('Task updated.')
             getTasks(token)
         }
-        
+
         const result = await res.json()
 
         // For error message
@@ -179,7 +176,7 @@ const TaskState = (props) => {
 
 
     const clearMessage = () => {
-        dispatch({type: CLEAR_MESSAGE})
+        dispatch({type: SET_MESSAGE, payload: null})
     }
 
     // Delete

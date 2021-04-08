@@ -4,19 +4,17 @@ import UserContext from "./userContext";
 import UserReducer from "./userReducer";
 
 import { SET_USER,
-         CLEAR_USER, 
          SET_LOADING,
-         SET_MESSAGE,
-         CLEAR_MESSAGE
+         SET_MESSAGE
          } from "../types";
 
 import url from '../url';
 
 const UserState = (props) => {
     const initialState = {
-        user: {},
+        user: null,
         isLoading: false,
-        message: {},
+        message: null,
     };
 
 
@@ -46,16 +44,17 @@ const UserState = (props) => {
         console.log(res.status);
         console.log(result);
 
-        dispatch({
-            type: SET_USER,
-            payload: result
-        })
-
         const {status, message} = result
-        dispatch({
-            type: SET_MESSAGE,
-            payload: {status, message} 
-        })
+        console.log(status ,message)
+
+        if (res === 200){
+            dispatch({
+                type: SET_USER,
+                payload: result
+            })
+        } else {
+            setMessage({status, message})
+        }
     };
 
 
@@ -82,17 +81,18 @@ const UserState = (props) => {
         console.log(res.status);
         console.log(result);
         
-        dispatch({
-            type: SET_USER,
-            payload: result
-        })
-
-        const {status, message} = result
-        dispatch({
-            type: SET_MESSAGE,
-            payload: {status, message}
-        })
-        
+        if (res === 200){
+            dispatch({
+                type: SET_USER,
+                payload: result
+            })
+        } else {
+            const {status, message} = result
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {status, message}
+            })
+        }
     };
 
 
@@ -100,7 +100,8 @@ const UserState = (props) => {
         setIsLoading();
 
         dispatch({
-            type: CLEAR_USER
+            type: SET_USER,
+            payload : null
         })
         // reroute to home
 
@@ -115,6 +116,10 @@ const UserState = (props) => {
     };
 
 
+    const setMessage = (data) => {
+        dispatch({ type: SET_MESSAGE, payload: data})
+    }
+
     // set loading to true
     const setIsLoading = () => {
         dispatch({ type: SET_LOADING });
@@ -122,7 +127,7 @@ const UserState = (props) => {
 
 
     const clearMessage = () => {
-        dispatch({type: CLEAR_MESSAGE})
+        dispatch({type: SET_MESSAGE, payload: null})
     }
 
 

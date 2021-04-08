@@ -1,6 +1,6 @@
-import React, {useState, useContext} from 'react'
-import {Container, Row, Col, Form, Button as ButtonB, Card} from 'react-bootstrap'
-
+import React, {useState, useContext, useEffect} from 'react'
+import {Container, Row, Col, Form, Card} from 'react-bootstrap'
+import {useHistory} from 'react-router-dom'
 
 import Button from '../../shared/button/button.component'
 
@@ -12,21 +12,27 @@ const SignIn = () => {
     const alertContext = useContext(AlertContext)
     const userContext = useContext(UserContext)
 
-    const {user, isLoading, logInUser} = userContext
+    const {user, message, isLoading, logInUser} = userContext
 
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
-
-    const handleSubmit = async(e, data) =>{
+  
+    const handleSubmit = (e, data) =>{
         e.preventDefault()
-        await logInUser(data)
-            .then(()=>{
-                if (user.status){
-                    alertContext.setAlert({title: user.status, message: user.message})
-                    // Reroute to Dashboard
-                } 
-            })
-    }
+        logInUser(data)
+    }       
+
+
+    useEffect(()=>{
+
+        if(user){
+            alertContext.setAlert({title: user.status, message: user.message})
+            <Redirect to='/'/>;
+        } else if (message){
+            alertContext.setAlert({title: message.status, message: message.message})
+        }
+        // eslint-disable-next-line
+    },[user, message])
 
     const button_props = {
         variant: "primary",

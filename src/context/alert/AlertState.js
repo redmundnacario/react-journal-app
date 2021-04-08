@@ -21,7 +21,7 @@ const AlertState = (props) => {
                   payload: alert})
     }
 
-    const clearAlert = () => dispatch({type:CLEAR_ALERT})
+    const clearAlert = () => dispatch({type:CLEAR_ALERT })
 
     return (
         <AlerContext.Provider

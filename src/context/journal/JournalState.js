@@ -7,8 +7,7 @@ import {
     SET_JOURNALS,
     SET_JOURNAL,
     SET_LOADING,
-    SET_MESSAGE,
-    CLEAR_MESSAGE,
+    SET_MESSAGE
 } from '../types'
 
 import url from '../url';
@@ -177,7 +176,7 @@ const JournalState = (props) => {
 
 
     const clearMessage = () => {
-        dispatch({type: CLEAR_MESSAGE})
+        dispatch({type: SET_MESSAGE, payload: null})
     }
 
     // Delete
