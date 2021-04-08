@@ -31,9 +31,9 @@ const UserState = (props) => {
     
     const logInUser = async (data, cb) => {
         setIsLoading();
-        console.log(process.env.NODE_ENV)
-        console.log("login function");
-        console.log(data);
+        // console.log(process.env.NODE_ENV)
+        // console.log("login function");
+        // console.log(data);
 
         let res;
         try {
@@ -49,11 +49,11 @@ const UserState = (props) => {
         }
 
         const result = await res.json();
-        console.log(res.status);
-        console.log(result);
+        // console.log(res.status);
+        // console.log(result);
 
         const {status, message} = result
-        console.log(status ,message)
+        // console.log(status ,message)
 
         if (res.status === 200){
 
@@ -72,8 +72,8 @@ const UserState = (props) => {
     const signUpUser = async (data, cb) => {
         setIsLoading();
 
-        console.log("signup function");
-        console.log(data);
+        // console.log("signup function");
+        // console.log(data);
 
         let res;
         try {
@@ -90,8 +90,8 @@ const UserState = (props) => {
 
         const result = await res.json();
         const {status, message} = result
-        console.log(res.status);
-        console.log(result);
+        // console.log(res.status);
+        // console.log(result);
         
 
         dispatch({
@@ -105,12 +105,38 @@ const UserState = (props) => {
     };
 
 
+    const autoLogin = async(token) => {
+        setIsLoading();
+
+        let res;
+        try {
+            res = await fetch(`${url}/auto_login`, {
+                method: "GET",
+                headers: {
+                'Authorization': `Bearer ${token}`
+                },
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+
+        const result = await res.json();
+        
+        dispatch({
+            type: SET_USER,
+            payload: result.data? {data: result.data, token: token} : null
+        })
+
+    }
+
+
     const logOutUser = (cb) => {
         setIsLoading();
 
         dispatch({
             type: SET_USER,
-            payload : {user: null, token: null}
+            payload : {data: null, token: null}
         })
         // reroute to home
 
@@ -151,6 +177,7 @@ const UserState = (props) => {
             message: state.message,
             logInUser,
             signUpUser,
+            autoLogin,
             logOutUser,
             setIsLoading,
             clearMessage
