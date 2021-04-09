@@ -25,9 +25,9 @@ const JournalState = (props) => {
 
 
     // fetch
-    const getJournals = async({token}) =>{
+    const getJournals = async(token) =>{
         setIsLoading()
-
+        console.log(token)
         const res = await fetch(`${url}/journals`,
             {
                 headers:{
@@ -54,7 +54,7 @@ const JournalState = (props) => {
             type: SET_MESSAGE,
             payload: out
         })
-
+        console.log(result)
     }
 
 

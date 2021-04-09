@@ -2,13 +2,13 @@ import React, {Fragment} from 'react'
 import {Button as ButtonB, Spinner} from 'react-bootstrap'
 
 
-const Button = ({isLoading, text, variant, type}) => {
+const Button = ({isLoading, text, variant, type, onClick}) => {
     return (
         <ButtonB
             variant={variant}
             disabled={isLoading}
             type={type}
-            onClick={null}
+            onClick={onClick}
         >
             {isLoading 
             ? 

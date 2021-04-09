@@ -56,7 +56,8 @@ const SignUp = () => {
     const button_props = {
         variant: "primary",
         text: "Sign Up",
-        type: "submit"
+        type: "submit",
+        onclick: null
     }
 
 

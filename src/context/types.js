@@ -17,3 +17,7 @@ export const SET_JOURNAL = 'SET_JOURNAL';// get single, edit, update, delete tas
 // Task
 export const SET_TASKS = 'SET_TASKS';// get all tasks
 export const SET_TASK = 'SET_TASK';// get single, edit, update, delete task
+
+// Modal
+export const SHOW_MODAL = 'SHOW_MODAL';
+export const HIDE_MODAL = 'HIDE_MODAL';

@@ -42,7 +42,8 @@ const SignIn = () => {
     const button_props = {
         variant: "primary",
         text: "Sign In",
-        type: "submit"
+        type: "submit",
+        onclick: null
     }
 
     // i: (<i className="fas fa-door-open"></i>)
