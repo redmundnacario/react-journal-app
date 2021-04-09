@@ -7,7 +7,8 @@ import {
     SET_JOURNALS,
     SET_JOURNAL,
     SET_LOADING,
-    SET_MESSAGE
+    SET_MESSAGE,
+    SET_ACTIVE_JOURNAL_ID
 } from '../types'
 
 import url from '../url';
@@ -16,6 +17,7 @@ const JournalState = (props) => {
     const initialState = {
         journals : [],
         journal : {},
+        journal_id: null,
         isLoading : false,
         message : {}
     }
@@ -27,7 +29,7 @@ const JournalState = (props) => {
     // fetch
     const getJournals = async(token) =>{
         setIsLoading()
-        console.log(token)
+        // console.log(token)
         const res = await fetch(`${url}/journals`,
             {
                 headers:{
@@ -54,13 +56,13 @@ const JournalState = (props) => {
             type: SET_MESSAGE,
             payload: out
         })
-        console.log(result)
+        // console.log(result)
     }
 
 
-    const getJournal = async({id, token})=>{
+    const getJournal = async(id, token)=>{
         setIsLoading()
-
+        console.log(id)
         const res = await fetch(`${url}/journals/${id}`,
             {
                 headers:{
@@ -88,7 +90,7 @@ const JournalState = (props) => {
 
 
     // Create
-    const createJournal = async({data, token}) => {
+    const createJournal = async(data, token , cb) => {
         setIsLoading()
 
         const res = await fetch(`${url}/journals`,
@@ -116,11 +118,13 @@ const JournalState = (props) => {
             type: SET_MESSAGE,
             payload: {status, message}
         })
+
+        cb({status, message})
     }
 
 
     // Edit
-    const updateJournal = async({data, id, token}) => {
+    const updateJournal = async(data, id, token, cb) => {
         setIsLoading()
         const res = await fetch(`${url}/journals/${id}`, 
                       {
@@ -146,11 +150,13 @@ const JournalState = (props) => {
             type: SET_MESSAGE,
             payload: {status, message}
         })
+
+        cb({status, message})
     }
 
 
     // Delete
-    const deleteJournal = async({id, token}) => {
+    const deleteJournal = async(id, token, cb) => {
         setIsLoading()
 
         const res = await fetch(`${url}/journals/${id}`, {
@@ -166,6 +172,19 @@ const JournalState = (props) => {
         } else{
             alert('Error in deleting this blog.')
         }
+
+        const result = await res.json()
+        // For error message
+        const {status, message} = result
+
+        cb({status, message})
+    }
+
+    const setJournalID = (id)=>{
+        dispatch({
+            type: SET_ACTIVE_JOURNAL_ID,
+            payload: id
+        })
     }
 
 
@@ -185,10 +204,12 @@ const JournalState = (props) => {
         value={{
             journals : state.journals,
             journal : state.journal,
+            journal_id: state.journal_id,
             isLoading : state.isLoading,
             message: state.message,
             getJournals,
             getJournal,
+            setJournalID,
             createJournal,
             updateJournal,
             deleteJournal,

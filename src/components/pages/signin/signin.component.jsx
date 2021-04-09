@@ -91,4 +91,4 @@ const SignIn = () => {
     )
 }
 
-export default withRouter(SignIn)
+export default SignIn

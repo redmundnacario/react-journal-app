@@ -1,5 +1,5 @@
 import React,{ useEffect, useContext} from 'react'
-import {Form, Modal,Button  as ButtonB} from 'react-bootstrap'
+// import {Form, Modal,Button  as ButtonB} from 'react-bootstrap'
 
 // Context
 import JournalContext from '../../../context/journal/journalContext'
@@ -9,6 +9,7 @@ import ModalContext from '../../../context/modal/modalContext'
 import JournalsList from './journals.list.component'
 import Button from '../../shared/button/button.component'
 
+import './journals.page.styles.scss'
 
 const JournalsPage = () => {
     const journalContext = useContext(JournalContext)
@@ -17,21 +18,23 @@ const JournalsPage = () => {
 
     const { journals, getJournals } = journalContext
     const {token} = userContext
-    const {showModal, hideModal} = modalContext
+    const {showModal} = modalContext
 
 
     useEffect(()=>{
         getJournals(token)
+        // eslint-disable-next-line 
     },[])
 
 
     const handleClick = () => {
-        showModal({modalBody:sampleForm})
+        showModal({modalBody:"JournalForms"})
     }
 
     const button_props = {
         variant: "primary",
-        text: "Create New",
+        size : null,
+        text: (<>Create <i className="fas fa-plus pl-2"></i></>),
         type: "submit",
         isLoading: null,
         onClick : handleClick
@@ -39,11 +42,10 @@ const JournalsPage = () => {
 
     return (
         <div className="container">
-            <div className="home-title">
-                <h3 className="">📎 Journals</h3>
+            <div className="journal-page-title my-5">
+                <h1 >🚀  Journals</h1>
                 <Button {...button_props}/>
             </div>
-            <h1>Journals Page</h1>
             {
                 journals.length > 0
                 ? <JournalsList journals={journals}/>
@@ -53,45 +55,5 @@ const JournalsPage = () => {
         </div>
     )
 }
-
-const sampleForm = (
-
-    <Form onSubmit={null}>
-
-        <Modal.Header closeButton className="border-0">
-            <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-                <Form.Group controlId="email">
-                <Form.Label>Email Address</Form.Label>
-                <Form.Control 
-                    type="email"
-                    onChange={null}
-                    required
-                />
-            </Form.Group>
-
-            <Form.Group controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    onChange={null}
-                    minLength="6"
-                    required
-                />
-            </Form.Group>
-        </Modal.Body>
-
-        <Modal.Footer className="border-0">
-        <ButtonB variant="secondary" onClick={null}>
-            Close
-        </ButtonB>
-        <ButtonB variant="primary" onClick={null}>
-            Save Changes
-        </ButtonB>
-        </Modal.Footer>
-    </Form>
-)
 
 export default JournalsPage

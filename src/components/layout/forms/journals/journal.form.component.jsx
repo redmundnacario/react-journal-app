@@ -1,58 +1,92 @@
-import React, {useContext, useState} from 'react'
-import {Form, Modal, Button as ButtonB} from 'react-bootstrap'
+import React, {useContext, useState, useEffect} from 'react'
+import {Form, Modal} from 'react-bootstrap'
 
-import Button from '../../shared/button/button.component'
+import Button from '../../../shared/button/button.component'
+// contexts
+import AlertContext from '../../../../context/alert/alertContext'
+import ModalContext from '../../../../context/modal/modalContext'
+import JournalContext from '../../../../context/journal/journalContext'
+import UserContext from '../../../../context/user/userContext'
 
-import ModalContext from '../../../context/modal/modalContext'
-
-const JournalForms = ({mode}) => {
+const JournalForms = () => {
+    const alertContext = useContext(AlertContext)
     const modalContext = useContext(ModalContext)
-    const {hideModal} = modalContext
-    
+    const userContext = useContext(UserContext)
+    const journalContext = useContext(JournalContext)
 
+    const {modalBody, hideModal} = modalContext
+    const {token} = userContext
+    const { journal, journal_id, getJournal, createJournal, updateJournal } = journalContext
+    
     const [title, setTitle] = useState(null)
     const [description, setDescription] = useState(null)
 
-    if (mode === "edit"){
-        // get values from db
+    useEffect(()=>{
+        console.log(journal_id)
+        if ((journal_id) && (modalBody === "JournalFormsEdit")){
+            // get values from db
+            getJournal(journal_id,token)
+            // set the title and description
+        }
+    }, [journal_id])
 
-        // set the title and description
-        setTitle("sample title")
-        setDescription("sample Description")
-    }
+    useEffect(() => {
+        if (journal && modalBody === "JournalFormsEdit"){
+            setTitle(journal.title)
+            setDescription(journal.description)
+        }
+        // eslint-disable-next-line 
+    }, [journal])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e, data) => {
         e.preventDefault()
 
-        // do something here
-        // if create, save to db
-
-        // if edit, save to db
+        console.log(data)
+        if (modalBody === "JournalFormsEdit"){
+            console.log("edit/update journal")
+            updateJournal(data, journal_id, token, setAlert)
+        } else {
+            console.log("create journal")
+            createJournal(data, token, setAlert)
+        }
 
         hideModal()
+    }
+
+    const setAlert = (message) => {
+        if (message){
+            alertContext.setAlert({title: message.status, message: message.message})
+        }
     }
 
     const button_props_save = {
         variant: "primary",
         text: "Save",
         type: "submit",
-        onclick: null,
+        onClick: null,
         isLoading: null,
     }
-
+    const cbHideModal = () => hideModal()
     const button_props_cancel = {
         variant: "secondary",
         text: "Cancel",
-        type: "submit",
-        onclick: null,
+        type: "button",
+        onClick: cbHideModal ,
         isLoading: null,
     }
 
     return (
-        <Form onSubmit={(e) => handleSubmit(e, {title, description})}>
+        <Form 
+            onSubmit={(e) => handleSubmit(e, {title, description})}
+            className="p-2"    
+        >
 
             <Modal.Header closeButton className="border-0">
-                <Modal.Title>Create Journal</Modal.Title>
+                {
+                    modalBody === "JournalFormsEdit"
+                    ? <Modal.Title>Update Journal</Modal.Title>
+                    : <Modal.Title>Create Journal</Modal.Title>
+                }
             </Modal.Header>
 
             <Modal.Body>
@@ -62,6 +96,7 @@ const JournalForms = ({mode}) => {
                         type="text"
                         placeholder="Title..."
                         onChange={(e) => setTitle(e.target.value)}
+                        value={title ? title : ""}
                         required
                     />
                 </Form.Group>
@@ -70,9 +105,11 @@ const JournalForms = ({mode}) => {
                     <Form.Label>Description</Form.Label>
                     <Form.Control
                         type="textarea"
-                        rows={3}
+                        minLength={10}
+                        rows={5}
                         placeholder="Insert journal description here..."
                         onChange={(e) => setDescription(e.target.value)}
+                        value={description ? description : ""}
                         required
                     />
                 </Form.Group>

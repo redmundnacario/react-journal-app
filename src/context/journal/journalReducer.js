@@ -2,7 +2,8 @@ import {
     SET_JOURNALS,
     SET_JOURNAL,
     SET_LOADING,
-    SET_MESSAGE
+    SET_MESSAGE,
+    SET_ACTIVE_JOURNAL_ID
 } from '../types'
 
 
@@ -30,6 +31,11 @@ const JournalReducer = (state, action) =>{
             return{
                 ...state,
                 isLoading: true
+            }
+        case SET_ACTIVE_JOURNAL_ID:
+            return{
+                ...state,
+                journal_id: action.payload
             }
         default:
             return state

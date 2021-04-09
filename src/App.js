@@ -10,8 +10,7 @@ import AlertContainer from './components/shared/alert/alert-container.component'
 import Modal from './components/shared/modal/modal.component'
 
 import JournalsPage from './components/pages/journals/journals.page.component'
-import JournalsTasksPage from './components/pages/journals/journals.tasks.page.component'
-import JournalsEditPage from './components/pages/journals/journals.edit.page.component'
+import TasksPage from './components/pages/tasks/tasks.page.component'
 // state
 import AlertState from './context/alert/AlertState'
 import ModalState from './context/modal/ModalState'
@@ -36,9 +35,9 @@ function App() {
                 <Route exact path="/signin" component={SignIn}/>
 
                 <Route exact path="/journals" component={JournalsPage}/>
-                <Route exact path="/journals/:id" component={JournalsPage}/>
-                <Route exact path="/journals/:id/edit" component={JournalsEditPage}/>
-                <Route exact path="/journals/:id/tasks" component={JournalsTasksPage}/>
+                <Route exact path="/journal/:id/tasks" component={TasksPage}/>
+
+                <Route exact path="/tasks_today" component={TasksPage}/>
 
                 <Route component={NotFound}/>
               </Switch>
