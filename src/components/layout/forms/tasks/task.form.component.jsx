@@ -3,51 +3,65 @@ import {Form, Modal} from 'react-bootstrap'
 
 import Button from '../../../shared/button/button.component'
 // contexts
+import JournalContext from '../../../../context/journal/journalContext'
 import AlertContext from '../../../../context/alert/alertContext'
 import ModalContext from '../../../../context/modal/modalContext'
-import JournalContext from '../../../../context/journal/journalContext'
+import TaskContext from '../../../../context/task/taskContext'
 import UserContext from '../../../../context/user/userContext'
 
-const JournalForms = () => {
+const TaskForms = () => {
+    const journalContext = useContext(JournalContext)
     const alertContext = useContext(AlertContext)
     const modalContext = useContext(ModalContext)
     const userContext = useContext(UserContext)
-    const journalContext = useContext(JournalContext)
+    const taskContext = useContext(TaskContext)
 
+    const { journal_id } = journalContext
     const {modalBody, hideModal} = modalContext
     const {token} = userContext
-    const { journal, journal_id, getJournal, createJournal, updateJournal } = journalContext
+    const { task, task_id, getTask, createTask, updateTask } = taskContext
     
     const [title, setTitle] = useState(null)
     const [description, setDescription] = useState(null)
+    const [deadline, setDeadline] = useState(null)
+    const [done, setDone] = useState(null)
 
     useEffect(()=>{
-        console.log(journal_id)
-        if ((journal_id) && (modalBody === "JournalFormsEdit")){
+        if ((task_id) && (modalBody === "TaskFormsEdit")){
             // get values from db
-            getJournal(journal_id,token)
+            getTask(task_id,token)
             // set the title and description
         }
-    }, [journal_id])
+    }, [task_id])
 
     useEffect(() => {
-        if (journal && modalBody === "JournalFormsEdit"){
-            setTitle(journal.title)
-            setDescription(journal.description)
+        if (task && modalBody === "TaskFormsEdit"){
+            setTitle(task.title)
+            setDescription(task.description)
         }
         // eslint-disable-next-line 
-    }, [journal])
+    }, [task])
 
     const handleSubmit = (e, data) => {
         e.preventDefault()
 
-        console.log(data)
-        if (modalBody === "JournalFormsEdit"){
-            console.log("edit/update journal")
-            updateJournal(data, journal_id, token, setAlert)
+        if (data.done ==="on"){
+            data.done = true
         } else {
-            console.log("create journal")
-            createJournal(data, token, setAlert)
+            data.done = false
+        }
+        data.journal_id = journal_id
+
+        console.log(data)
+
+
+        console.log(data)
+        if (modalBody === "TaskFormsEdit"){
+            console.log("edit/update task")
+            updateTask(data, task_id, token, setAlert)
+        } else {
+            console.log("create task")
+            createTask(data, token, setAlert)
         }
 
         hideModal()
@@ -77,15 +91,15 @@ const JournalForms = () => {
 
     return (
         <Form 
-            onSubmit={(e) => handleSubmit(e, {title, description})}
+            onSubmit={(e) => handleSubmit(e, {title, description, deadline, done})}
             className="p-2"    
         >
 
             <Modal.Header closeButton className="border-0">
                 {
-                    modalBody === "JournalFormsEdit"
-                    ? <Modal.Title>Update Journal</Modal.Title>
-                    : <Modal.Title>Create Journal</Modal.Title>
+                    modalBody === "TaskFormsEdit"
+                    ? <Modal.Title>Update Task</Modal.Title>
+                    : <Modal.Title>Create Task</Modal.Title>
                 }
             </Modal.Header>
 
@@ -107,12 +121,23 @@ const JournalForms = () => {
                         as="textarea"
                         minLength={10}
                         rows={5}
-                        placeholder="Insert journal description here..."
+                        placeholder="Insert task description here..."
                         onChange={(e) => setDescription(e.target.value)}
                         value={description ? description : ""}
                         required
                     />
                 </Form.Group>
+
+                <Form.Group controlId="deadline">
+                    <Form.Label>Deadline</Form.Label>
+                    <Form.Control type="date" name='deadline' onChange ={(e) => setDeadline(e.target.value)}/>
+                </Form.Group>
+    
+                <Form.Group controlId="done">
+                    <Form.Label>Status</Form.Label>
+                    <Form.Check type="checkbox" label="Done?" onChange ={(e) => setDone(e.target.value)} />
+                </Form.Group>
+
             </Modal.Body>
 
             <Modal.Footer className="border-0">
@@ -127,4 +152,4 @@ const JournalForms = () => {
     )
 }
 
-export default JournalForms
+export default TaskForms

@@ -1,14 +1,8 @@
-import React, {useContext} from 'react'
-
-import JournalContext from '../../../context/journal/journalContext'
+import React from 'react'
 
 import JournalCard from '../../layout/cards/journals/journal.card.component'
 
-const JournalsList = () => {
-
-    const journalContext = useContext(JournalContext)
-
-    const { journals, getJournals } = journalContext
+const JournalsList = ({journals}) => {
 
     return (
         <div className="journal-list">

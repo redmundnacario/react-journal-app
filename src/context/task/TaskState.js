@@ -5,9 +5,11 @@ import TaskReducer from './taskReducer'
 
 import {
     SET_TASKS,
+    SET_TASKS_TODAY,
     SET_TASK,
     SET_LOADING,
-    SET_MESSAGE
+    SET_MESSAGE,
+    SET_ACTIVE_TASK_ID
 } from '../types'
 
 import url from '../url';
@@ -15,9 +17,11 @@ import url from '../url';
 const TaskState = (props) => {
     const initialState = {
         tasks : [],
-        task : null,
+        task : {},
+        tasks_today: [],
+        task_id: null,
         isLoading : false,
-        message : null
+        message : {}
     }
 
     
@@ -25,7 +29,7 @@ const TaskState = (props) => {
 
 
     // fetch
-    const getTasks = async({token}) =>{
+    const getTasks = async(token) =>{
         setIsLoading()
 
         const res = await fetch(`${url}/tasks`,
@@ -54,7 +58,105 @@ const TaskState = (props) => {
             type: SET_MESSAGE,
             payload: out
         })
+    }
 
+
+    const getTasksByJournalID = async(journal_id, token) =>{
+        setIsLoading()
+
+        const res = await fetch(`${url}/tasks/journal/${journal_id}`,
+            {
+                headers:{
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+        const result = await res.json()
+        // const {status, message} = result
+        
+        console.log(result)
+        if (res.status === 200){
+            console.log('Tasks fetched.')
+            dispatch({
+                type: SET_TASKS,
+                payload: result.data
+            })
+        } else {
+            const out = {
+                status: "Error",
+                message: "Something wrong with fetching the tasks. Try again."
+            }
+           
+            dispatch({
+                type: SET_MESSAGE,
+                payload: out
+            })
+        }
+    }
+
+
+    const getTasksToday = async(token) =>{
+        setIsLoading()
+
+        const res = await fetch(`${url}/today/tasks`,
+            {
+                headers:{
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+        const result = await res.json()
+        // const {status, message} = result
+
+        if (res.status === 200){
+            console.log('Tasks fetched.')
+            dispatch({
+                type: SET_TASKS_TODAY,
+                payload: result.data
+            })
+        } else {
+            const out = {
+                status: "Error",
+                message: "Something wrong with fetching the tasks. Try again."
+            }
+           
+            dispatch({
+                type: SET_MESSAGE,
+                payload: out
+            })
+        }
+    }
+
+    const getTasksTodayByJournalID = async(journal_id, token) =>{
+        setIsLoading()
+
+        const res = await fetch(`${url}/today/tasks/journal/${journal_id}`,
+            {
+                headers:{
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+        const result = await res.json()
+        // const {status, message} = result
+
+        if (res.status === 200){
+            console.log('Tasks fetched.')
+            dispatch({
+                type: SET_TASKS_TODAY,
+                payload: result.data
+            })
+        } else {
+            const out = {
+                status: "Error",
+                message: "Something wrong with fetching the tasks. Try again."
+            }
+           
+            dispatch({
+                type: SET_MESSAGE,
+                payload: out
+            })
+        }
     }
 
 
@@ -88,7 +190,7 @@ const TaskState = (props) => {
 
 
     // Create
-    const createTask = async({data, token}) => {
+    const createTask = async(data, token, cb) => {
         setIsLoading()
 
         const res = await fetch(`${url}/tasks`,
@@ -106,7 +208,7 @@ const TaskState = (props) => {
         // fetch success or not
         if (res.status === 201){
             console.log('Task created.')
-            getTasks(token)
+            getTasksByJournalID(token)
         } 
 
         const result = await res.json()
@@ -117,11 +219,13 @@ const TaskState = (props) => {
             type: SET_MESSAGE,
             payload: {status, message}
         })
+
+        cb({status, message})
     }
 
 
     // Edit
-    const updateTask = async({data, id, token}) => {
+    const updateTask = async(data, id, token, cb) => {
         setIsLoading()
         const res = await fetch(`${url}/tasks/${id}`, 
                       {
@@ -135,7 +239,7 @@ const TaskState = (props) => {
 
         if (res.status === 200){
             console.log('Task updated.')
-            getTasks(token)
+            getTasksByJournalID(token)
         }
 
         const result = await res.json()
@@ -146,11 +250,13 @@ const TaskState = (props) => {
             type: SET_MESSAGE,
             payload: {status, message}
         })
+
+        cb({status, message})
     }
 
 
     // Delete
-    const deleteTask = async({id, token}) => {
+    const deleteTask = async(id, token) => {
         setIsLoading()
 
         const res = await fetch(`${url}/tasks/${id}`, {
@@ -162,10 +268,17 @@ const TaskState = (props) => {
     
         if (res.status === 200 ){
             console.log('Task deleted.')
-            getTasks(token)
+            getTasksByJournalID(token)
         } else{
             alert('Error in deleting this blog.')
         }
+    }
+
+    const setTaskID = (id)=>{
+        dispatch({
+            type: SET_ACTIVE_TASK_ID,
+            payload: id
+        })
     }
 
 
@@ -185,10 +298,16 @@ const TaskState = (props) => {
         value={{
             tasks : state.tasks,
             task : state.task,
+            tasks_today: state.tasks_today,
+            task_id : state.task_id,
             isLoading : state.isLoading,
             message: state.message,
             getTasks,
+            getTasksToday,
+            getTasksByJournalID,
+            getTasksTodayByJournalID,
             getTask,
+            setTaskID,
             createTask,
             updateTask,
             deleteTask,

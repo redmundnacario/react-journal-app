@@ -15,36 +15,39 @@ import TasksPage from './components/pages/tasks/tasks.page.component'
 import AlertState from './context/alert/AlertState'
 import ModalState from './context/modal/ModalState'
 import JournalState from './context/journal/JournalState'
+import TaskState from './context/task/TaskState'
 
 function App() {
   
 
   return (
     <JournalState>
-      <AlertState>
-        <ModalState>
-          <Router>
-            <div className="App">
-              <Navbar />
-              <AlertContainer/>
-              <Modal/>
-              <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route exact path="/about" component={About}/>
-                <Route exact path="/signup" component={SignUp}/>
-                <Route exact path="/signin" component={SignIn}/>
+      <TaskState>
+        <AlertState>
+          <ModalState>
+            <Router>
+              <div className="App">
+                <Navbar />
+                <AlertContainer/>
+                <Modal/>
+                <Switch>
+                  <Route exact path="/" component={Home}/>
+                  <Route exact path="/about" component={About}/>
+                  <Route exact path="/signup" component={SignUp}/>
+                  <Route exact path="/signin" component={SignIn}/>
 
-                <Route exact path="/journals" component={JournalsPage}/>
-                <Route exact path="/journal/:id/tasks" component={TasksPage}/>
+                  <Route exact path="/journals" component={JournalsPage}/>
+                  <Route exact path="/journal/:id/tasks" component={TasksPage}/>
 
-                <Route exact path="/tasks_today" component={TasksPage}/>
+                  <Route exact path="/tasks_today" component={TasksPage}/>
 
-                <Route component={NotFound}/>
-              </Switch>
-            </div>
-          </Router>
-        </ModalState>
-      </AlertState>
+                  <Route component={NotFound}/>
+                </Switch>
+              </div>
+            </Router>
+          </ModalState>
+        </AlertState>
+      </TaskState>
     </JournalState>
   );
 }
