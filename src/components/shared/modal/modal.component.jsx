@@ -8,6 +8,8 @@ import ModalContext from '../../../context/modal/modalContext'
 import JournalForms from '../../layout/forms/journals/journal.form.component'
 import TaskForms from '../../layout/forms/tasks/task.form.component'
 import JournalDelete from '../../layout/modalContent/journal.delete.component'
+import TaskDelete from '../../layout/modalContent/task.delete.component'
+
 const Modal = () => {
 
     const modalContext = useContext(ModalContext)
@@ -26,6 +28,12 @@ const Modal = () => {
             }
             {
                 modalBody === "TaskForms" && <TaskForms/>
+            }
+            {
+                modalBody === "TaskFormsEdit" && <TaskForms/>
+            }
+            {
+                modalBody === "DeleteTask" && <TaskDelete/>
             }
         </ModalB>
     )

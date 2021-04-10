@@ -13,7 +13,7 @@ import url from '../url';
 const UserState = (props) => {
     const initialState = {
         user: {},
-        token : [],
+        token : null,
         isLoading: false,
         message: {},
     };
@@ -21,7 +21,7 @@ const UserState = (props) => {
 
     const [state, dispatch] = useReducer(UserReducer, initialState, () =>{
         const tokenLocal = localStorage.getItem('token')
-        return tokenLocal ? {...initialState, token: JSON.parse(tokenLocal)} : null
+        return tokenLocal ? {...initialState, token: JSON.parse(tokenLocal)} : initialState
     });
 
     useEffect(()=>{
@@ -29,7 +29,7 @@ const UserState = (props) => {
         localStorage.setItem('token',JSON.stringify(state.token))
 
         // eslint-disable-next-line
-    }, [state])
+    }, [state.token])
     
     const logInUser = async (data, cb) => {
         setIsLoading();

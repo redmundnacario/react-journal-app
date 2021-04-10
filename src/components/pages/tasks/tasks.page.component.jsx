@@ -32,6 +32,7 @@ const TasksPage = () => {
     console.log(id)
 
     useEffect(()=>{
+        setJournalID(id)
         getJournal(id, token)
         getTasksByJournalID(id, token)
         getTasksTodayByJournalID(id, token)
@@ -39,7 +40,6 @@ const TasksPage = () => {
     },[])
 
     const handleClick = () => {
-        setJournalID(id)
         showModal({modalBody:"TaskForms"})
     }
 
@@ -51,7 +51,7 @@ const TasksPage = () => {
         isLoading: null,
         onClick : handleClick
     }
-    console.log(tasks_today)
+    
     return (
         
         <div className="container">

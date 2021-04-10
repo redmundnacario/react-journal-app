@@ -19,7 +19,7 @@ const TaskState = (props) => {
         tasks : [],
         task : {},
         tasks_today: [],
-        task_id: [],
+        task_id: null,
         isLoading : false,
         message : {}
     }
@@ -229,13 +229,16 @@ const TaskState = (props) => {
         setIsLoading()
         const res = await fetch(`${url}/tasks/${id}`, 
                       {
-                        method: 'PATCH',
+                        method: 'PUT',
                         headers: {
                           'Content-type': 'application/json',
                           'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify(data),
                       })
+
+        console.log(`${url}/tasks/${id}`)
+        console.log(res.data)
 
         if (res.status === 200){
             console.log('Task updated.')
@@ -268,7 +271,7 @@ const TaskState = (props) => {
     
         if (res.status === 200 ){
             console.log('Task deleted.')
-            getTasksByJournalID(journal_id, token)
+            getTasksByJournalID(state.journal_id, token)
         } else{
             console.log('Error in deleting this blog.')
         }

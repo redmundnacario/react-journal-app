@@ -11,7 +11,7 @@ import {
 const ModalState = props => {
     const initialState = {
         show: false,
-        modalBody: []
+        modalBody: null
     }
     const [state, dispatch] = useReducer(ModalReducer, initialState)
 

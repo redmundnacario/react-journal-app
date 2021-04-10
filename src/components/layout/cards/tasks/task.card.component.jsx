@@ -1,35 +1,39 @@
 import React, {useContext} from 'react'
 import {Card, Badge} from 'react-bootstrap'
+// import {useParams} from 'react-router-dom'
 
 import './task.card.styles.scss'
 
 // import AlertContext from '../../../../context/alert/alertContext'
-import TaskContext from '../../../../context/journal/journalContext'
+import TaskContext from '../../../../context/task/taskContext'
 import ModalContext from '../../../../context/modal/modalContext'
-// import UserContext from '../../../../context/user/userContext'
+import JournalContext from '../../../../context/journal/journalContext'
 
 const TaskCard = ({task}) => {
-
-    const{id, title, description, deadline, done} = task
+    // const {id} = useParams()
+    const {id, title, description, deadline, done} = task
     
     // const alertContext = useContext(AlertContext)
     const taskContext = useContext(TaskContext)
     const modalContext = useContext(ModalContext)
-    // const userContext = useContext(UserContext)
+    const journalContext = useContext(JournalContext)
 
     // const {token} = userContext
     const {setTaskID } = taskContext
+    const {setJournalID } = journalContext
     const {showModal} = modalContext
 
     const handleEdit = (e) => {
         e.preventDefault()
         setTaskID(id)
+        // setJournalID(id)
         showModal({modalBody:"TaskFormsEdit"})
     }
 
     const handleDelete = (e) => {
         e.preventDefault()
         setTaskID(id)
+        // setJournalID(id)
         showModal({modalBody:"DeleteTask"})
     }
 

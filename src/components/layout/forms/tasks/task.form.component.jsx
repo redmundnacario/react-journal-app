@@ -17,8 +17,8 @@ const TaskForms = () => {
     const taskContext = useContext(TaskContext)
 
     const { journal_id } = journalContext
-    const {modalBody, hideModal} = modalContext
-    const {token} = userContext
+    const { modalBody, hideModal} = modalContext
+    const { token} = userContext
     const { task, task_id, getTask, createTask, updateTask } = taskContext
     
     const [title, setTitle] = useState(null)
@@ -38,6 +38,8 @@ const TaskForms = () => {
         if (task && modalBody === "TaskFormsEdit"){
             setTitle(task.title)
             setDescription(task.description)
+            setDeadline(task.deadline)
+            setDone(task.done)
         }
         // eslint-disable-next-line 
     }, [task])
@@ -130,12 +132,22 @@ const TaskForms = () => {
 
                 <Form.Group controlId="deadline">
                     <Form.Label>Deadline</Form.Label>
-                    <Form.Control type="date" name='deadline' onChange ={(e) => setDeadline(e.target.value)}/>
+                    <Form.Control 
+                        type="date" 
+                        name='deadline' 
+                        onChange = {(e) => setDeadline(e.target.value)}
+                        value ={deadline}
+                    />
                 </Form.Group>
     
                 <Form.Group controlId="done">
                     <Form.Label>Status</Form.Label>
-                    <Form.Check type="checkbox" label="Done?" onChange ={(e) => setDone(e.target.value)} />
+                    <Form.Check 
+                        type="checkbox" 
+                        label="Done?" 
+                        onChange ={(e) => setDone(e.target.value)}
+                        defaultChecked={ done}
+                    />
                 </Form.Group>
 
             </Modal.Body>

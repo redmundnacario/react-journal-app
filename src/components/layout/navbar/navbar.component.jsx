@@ -45,8 +45,9 @@ const Navbar = () => {
                         token ?
                         <Fragment>
                             <Nav.Link as={Link} to="/journals">Journals</Nav.Link>
-                            
-                            <Nav.Link as={Link} to="/account">Account</Nav.Link>
+                            {
+                            // <Nav.Link as={Link} to="/account">Account</Nav.Link>
+                            }
                             <Nav.Link onClick={()=>handleClick()}>Logout</Nav.Link>
                         </Fragment>
                         :

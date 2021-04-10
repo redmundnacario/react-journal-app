@@ -1,4 +1,4 @@
-import {useReducer} from 'react'
+import {useReducer, useEffect} from 'react'
 
 import JournalContext from './journalContext'
 import JournalReducer from './journalReducer'
@@ -17,13 +17,23 @@ const JournalState = (props) => {
     const initialState = {
         journals : [],
         journal : {},
-        journal_id: [],
+        journal_id: null,
         isLoading : false,
         message : {}
     }
 
     
-    const [state, dispatch] = useReducer(JournalReducer, initialState)
+    const [state, dispatch] = useReducer(JournalReducer, initialState, () =>{
+        const tokenLocal = localStorage.getItem('journal_id')
+        return tokenLocal ? {...initialState, journal_id: JSON.parse(tokenLocal)} : initialState
+    });
+
+    useEffect(()=>{
+       
+        localStorage.setItem('journal_id',JSON.stringify(state.journal_id))
+
+        // eslint-disable-next-line
+    }, [state.journal_id])
 
 
     // fetch
