@@ -28,6 +28,8 @@ const TasksPage = () => {
 
     const {token} = userContext
     const {showModal} = modalContext
+    
+    console.log(id)
 
     useEffect(()=>{
         getJournal(id, token)

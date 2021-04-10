@@ -19,7 +19,7 @@ const TaskState = (props) => {
         tasks : [],
         task : {},
         tasks_today: [],
-        task_id: null,
+        task_id: [],
         isLoading : false,
         message : {}
     }
@@ -160,7 +160,7 @@ const TaskState = (props) => {
     }
 
 
-    const getTask = async({id, token})=>{
+    const getTask = async(id, token)=>{
         setIsLoading()
 
         const res = await fetch(`${url}/tasks/${id}`,
@@ -208,7 +208,7 @@ const TaskState = (props) => {
         // fetch success or not
         if (res.status === 201){
             console.log('Task created.')
-            getTasksByJournalID(token)
+            getTasksByJournalID(data.journal_id, token)
         } 
 
         const result = await res.json()
@@ -239,7 +239,7 @@ const TaskState = (props) => {
 
         if (res.status === 200){
             console.log('Task updated.')
-            getTasksByJournalID(token)
+            getTasksByJournalID(data.journal_id, token)
         }
 
         const result = await res.json()
@@ -256,7 +256,7 @@ const TaskState = (props) => {
 
 
     // Delete
-    const deleteTask = async(id, token) => {
+    const deleteTask = async(id, journal_id, token, cb) => {
         setIsLoading()
 
         const res = await fetch(`${url}/tasks/${id}`, {
@@ -268,10 +268,15 @@ const TaskState = (props) => {
     
         if (res.status === 200 ){
             console.log('Task deleted.')
-            getTasksByJournalID(token)
+            getTasksByJournalID(journal_id, token)
         } else{
-            alert('Error in deleting this blog.')
+            console.log('Error in deleting this blog.')
         }
+        const result = await res.json()
+        // For error message
+        const {status, message} = result
+
+        cb({status, message})
     }
 
     const setTaskID = (id)=>{

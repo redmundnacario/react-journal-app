@@ -17,7 +17,7 @@ const JournalState = (props) => {
     const initialState = {
         journals : [],
         journal : {},
-        journal_id: null,
+        journal_id: [],
         isLoading : false,
         message : {}
     }
@@ -170,7 +170,7 @@ const JournalState = (props) => {
             console.log('Journal deleted.')
             getJournals(token)
         } else{
-            alert('Error in deleting this blog.')
+            console.log('Error in deleting this blog.')
         }
 
         const result = await res.json()

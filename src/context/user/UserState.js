@@ -12,10 +12,10 @@ import url from '../url';
 
 const UserState = (props) => {
     const initialState = {
-        user: null,
-        token : null,
+        user: {},
+        token : [],
         isLoading: false,
-        message: null,
+        message: {},
     };
 
 
