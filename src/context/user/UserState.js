@@ -13,7 +13,7 @@ import url from '../url';
 const UserState = (props) => {
     const initialState = {
         user: null,
-        token : "",
+        token : null,
         isLoading: false,
         message: null,
     };
@@ -25,9 +25,11 @@ const UserState = (props) => {
     });
 
     useEffect(()=>{
+       
         localStorage.setItem('token',JSON.stringify(state.token))
+
         // eslint-disable-next-line
-    }, [state.token])
+    }, [state])
     
     const logInUser = async (data, cb) => {
         setIsLoading();
