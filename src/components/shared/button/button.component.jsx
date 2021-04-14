@@ -14,14 +14,13 @@ const Button = ({isLoading, text, variant, type, size, onClick}) => {
             {isLoading 
             ? 
             <Fragment>
-            loading... 
             <Spinner
                 as="span"
                 animation="border"
                 size="sm"
                 role="status"
                 aria-hidden="true"
-            /> 
+            />  loading ... 
             </Fragment>
             : text} 
         </ButtonB>

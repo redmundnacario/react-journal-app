@@ -209,6 +209,7 @@ const TaskState = (props) => {
         if (res.status === 201){
             console.log('Task created.')
             getTasksByJournalID(data.journal_id, token)
+            getTasksTodayByJournalID(data.journal_id, token)
         } 
 
         const result = await res.json()
@@ -243,6 +244,7 @@ const TaskState = (props) => {
         if (res.status === 200){
             console.log('Task updated.')
             getTasksByJournalID(data.journal_id, token)
+            getTasksTodayByJournalID(data.journal_id, token)
         }
 
         const result = await res.json()
@@ -271,7 +273,9 @@ const TaskState = (props) => {
     
         if (res.status === 200 ){
             console.log('Task deleted.')
-            getTasksByJournalID(state.journal_id, token)
+            console.log()
+            getTasksByJournalID(journal_id, token)
+            getTasksTodayByJournalID(journal_id, token)
         } else{
             console.log('Error in deleting this blog.')
         }

@@ -20,7 +20,13 @@ const Navbar = () => {
 
     const handleClick = () => {
         console.log("logout clicked")
-        logOutUser(setAlertReRoute)
+
+        const status_message = {
+            status: "Success",
+            message: "User Logged out."
+        }
+
+        logOutUser(setAlertReRoute, status_message)
     }
 
     const setAlertReRoute = (message, statusCode) => {
@@ -32,6 +38,8 @@ const Navbar = () => {
             reRoute()
         }
     }
+
+    
 
     return (
        
@@ -46,7 +54,7 @@ const Navbar = () => {
                         <Fragment>
                             <Nav.Link as={Link} to="/journals">Journals</Nav.Link>
                             {
-                            // <Nav.Link as={Link} to="/account">Account</Nav.Link>
+                            <Nav.Link as={Link} to="/account">Account</Nav.Link>
                             }
                             <Nav.Link onClick={()=>handleClick()}>Logout</Nav.Link>
                         </Fragment>

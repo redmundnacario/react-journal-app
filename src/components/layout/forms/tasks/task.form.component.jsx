@@ -136,7 +136,7 @@ const TaskForms = () => {
                         type="date" 
                         name='deadline' 
                         onChange = {(e) => setDeadline(e.target.value)}
-                        value ={deadline}
+                        value ={deadline ? deadline : ""}
                     />
                 </Form.Group>
     
@@ -146,7 +146,7 @@ const TaskForms = () => {
                         type="checkbox" 
                         label="Done?" 
                         onChange ={(e) => setDone(e.target.value)}
-                        defaultChecked={ done}
+                        defaultChecked={ done }
                     />
                 </Form.Group>
 

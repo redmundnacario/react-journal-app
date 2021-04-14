@@ -25,11 +25,17 @@ const UserState = (props) => {
     });
 
     useEffect(()=>{
-       
         localStorage.setItem('token',JSON.stringify(state.token))
-
         // eslint-disable-next-line
     }, [state.token])
+
+    useEffect(()=>{
+        if (state.token){
+            autoLogin(state.token)
+            console.log("getting user info")
+        }
+        // eslint-disable-next-line
+    }, [])
     
     const logInUser = async (data, cb) => {
         setIsLoading();
@@ -133,7 +139,7 @@ const UserState = (props) => {
     }
 
 
-    const logOutUser = (cb) => {
+    const logOutUser = (cb, status_message) => {
         setIsLoading();
 
         dispatch({
@@ -142,17 +148,83 @@ const UserState = (props) => {
         })
         // reroute to home
 
-        const result = {
-            status: "Success",
-            message: "User Logged out."
-        }
+        
         dispatch({
             type: SET_MESSAGE,
-            payload: result
+            payload: status_message
         })
 
-        cb(result, 200)
+        cb(status_message, 200)
     };
+
+    const updateUserAccount = async(data, token, cb) => {
+        setIsLoading();
+
+        let res;
+        try {
+            res = await fetch(`${url}/user`, {
+                method: "PATCH",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data),
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+        const result = await res.json();
+        const {status, message} = result
+
+        if (res.status === 200){
+            console.log("User's information were updated.")
+            autoLogin(token)
+        }
+        
+        dispatch({
+            type: SET_MESSAGE,
+            payload: {status, message}
+        })
+        
+        cb({status, message})
+    }
+
+    const deleteUserAccount = async(token, cb) => {
+        setIsLoading();
+        let res;
+        try {
+            res = await fetch(`${url}/user`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (res.status === 200){
+            const status_message = {
+                status: "Success",
+                message: "User account deleted."
+            }
+
+            logOutUser(cb, status_message)
+
+        } else {
+            const status_message = {
+                status: "Error",
+                message: "User account deletion failed."
+            }
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: status_message
+            })
+
+            cb(status_message, res.status)
+        }
+    }
 
 
     const setMessage = (data) => {
@@ -181,6 +253,8 @@ const UserState = (props) => {
             signUpUser,
             autoLogin,
             logOutUser,
+            updateUserAccount,
+            deleteUserAccount,
             setIsLoading,
             clearMessage
         }}
