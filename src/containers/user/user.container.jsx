@@ -20,11 +20,14 @@ const UserContainer = () => {
     const [password, setPassword] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState(null)
 
+    const [mode , setMode] = useState("show")
+    const [open, setOpen] = useState("true")
+
     useEffect(()=>{
         setEmail(user.email)
         setUsername(user.username)
         // eslint-disable-next-line
-    }, [])
+    }, [user])
 
     const reRoute = () => history.push("/")
 
@@ -34,18 +37,45 @@ const UserContainer = () => {
         }
     }
 
+    const cleanData = (data) => {
+
+        for (var propName in data) {
+            if (data[propName] === null || data[propName] === undefined) {
+            delete data[propName];
+            }
+        }
+        return data
+    }
     const handleSubmit = (e, data) =>{
         e.preventDefault()
-
+        data = cleanData(data)
         console.log(data)
 
-        // update user info
+        if ("password" in data && "confirmPassword" in data ) {
+            if (data.password !== data.confirmPassword){
+                // set alert passwords did not match
+                alertContext.setAlert({title: "Error", message: "Passwords did not match."})
+                return
+            }
+        }
         updateUserAccount(data,token, setAlertUpdateUserAccount)
+        setMode("show")
+        setOpen(!open)
     }
 
-    const handleCancel = ()
+    const button_props ={
+        variant: "primary",
+        text: "Save",
+        type: "submit"
+    }
 
-    const propsSent = {
+    const button_props_cancel ={
+        variant: "secondary",
+        text: "Cancel",
+        type: "button"
+    }
+
+    let props = {
         email,
         setEmail,
         username,
@@ -57,12 +87,15 @@ const UserContainer = () => {
         isLoading,
         handleSubmit,
         button_props,
-        button_props_cancel
-
+        button_props_cancel,
+        mode,
+        setMode,
+        open,
+        setOpen
     }
     return (
         <UserPage 
-            {...propsSent}
+            {...props}
         />
     )
 }

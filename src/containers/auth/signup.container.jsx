@@ -23,6 +23,8 @@ const SignUpContainer = () => {
     const [password, setPassword] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState(null)
     
+    const [mode , setMode] = useState("create")
+
     const reRoute = () => history.push("/")
 
     const handleSubmit = (e, data) =>{
@@ -69,7 +71,9 @@ const SignUpContainer = () => {
         setConfirmPassword,
         isLoading,
         handleSubmit,
-        button_props
+        button_props,
+        mode,
+        setMode
     }
 
 

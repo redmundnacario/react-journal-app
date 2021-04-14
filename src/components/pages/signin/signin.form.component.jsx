@@ -21,6 +21,7 @@ const SignInForm = (props) => {
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled = {isLoading}
                 />
             </Form.Group>
         
@@ -31,6 +32,7 @@ const SignInForm = (props) => {
                     onChange={(e) => setPassword(e.target.value)}
                     minLength="6"
                     required
+                    disabled = {isLoading}
                 />
             </Form.Group>
             <Button

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Form} from 'react-bootstrap'
 
 import Button from '../../shared/button/button.component'
@@ -17,10 +17,11 @@ const SignUpForm = (props) => {
         isLoading,
         handleSubmit,
         button_props,
-        button_props_cancel
+        button_props_cancel,
+        mode
         } = props
 
-    console.log(email)
+    
     return (
         <Form onSubmit={e => handleSubmit(e, {username, email, password, confirmPassword})}>
 
@@ -29,7 +30,9 @@ const SignUpForm = (props) => {
                 <Form.Control 
                     type="text"
                     onChange={(e) => setUsername(e.target.value)}
-                    required
+                    value = {username ? username : ""}
+                    required = {mode === "edit" ? false : true}
+                    disabled = {mode === "edit" || mode === "create" ? false : true}
                 />
             </Form.Group>
 
@@ -38,39 +41,56 @@ const SignUpForm = (props) => {
                 <Form.Control 
                     type="email" 
                     onChange={(e) => setEmail(e.target.value)}
-                    required
+                    value = {email ? email : ""}
+                    required = {mode === "edit" ? false : true}
+                    disabled = {mode === "edit" || mode === "create" ? false : true}
                 />
             </Form.Group>
         
-            <Form.Group controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control 
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    minLength="6"
-                    required
-                />
-            </Form.Group>
-
-            <Form.Group controlId="confirmpassword">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control 
-                    type="password"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    minLength="6"
-                    required
-                />
-            </Form.Group>
-            
-            <Button
-                {...button_props}
-                isLoading = {isLoading}
-            />
             {
-                button_props_cancel && 
-                <Button
-                {...button_props_cancel}
-                />
+                mode === "edit" || mode === "create"
+                ?
+                <Fragment>
+                    <Form.Group controlId="password">
+                        <Form.Label>{mode !== "show" ? "New Password": "Password"}</Form.Label>
+                        <Form.Control 
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            minLength="6"
+                            // value = {""}
+                            required = {mode === "edit" ? false : true}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="confirmpassword">
+                        <Form.Label>{mode !== "show" ? "Confirm New Password": "Confirm Password"}</Form.Label>
+                        <Form.Control 
+                            type="password"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            minLength="6"
+                            // value = {""}
+                            required = {mode === "edit" ? false : true}
+                        />
+                    </Form.Group>
+                </Fragment>
+                : ""
+            }
+            {
+                mode === "edit" || mode === "create"
+                ?
+                <Fragment>
+                    <Button
+                        {...button_props}
+                        isLoading = {isLoading}
+                    />
+                    {
+                        button_props_cancel && 
+                        <Button
+                        {...button_props_cancel}
+                        />
+                    }
+                </Fragment>
+                :""
             }
         </Form>
     )

@@ -159,12 +159,13 @@ const UserState = (props) => {
 
     const updateUserAccount = async(data, token, cb) => {
         setIsLoading();
-
+        console.log(data)
         let res;
         try {
             res = await fetch(`${url}/user`, {
-                method: "PATCH",
+                method: 'PATCH',
                 headers: {
+                    'Content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(data),
@@ -176,9 +177,15 @@ const UserState = (props) => {
         const result = await res.json();
         const {status, message} = result
 
+        console.log(res.status)
+
         if (res.status === 200){
             console.log("User's information were updated.")
-            autoLogin(token)
+            dispatch({
+                type: SET_USER,
+                payload : {data: result.data, token: token}
+            })
+            console.log(result.data)
         }
         
         dispatch({

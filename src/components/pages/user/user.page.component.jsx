@@ -2,20 +2,20 @@ import React, {useState} from 'react'
 import {Card} from 'react-bootstrap'
 
 import Button from '../../shared/button/button.component'
-
-
+import SignUpForm from '../../pages/signup/signup.form.component'
 
 const UserPage = (props) => {
-    const { 
-            user
-        } = props
-    
-    const [open, setOpen] = useState("true")
+    const {setMode, open, setOpen} = props
 
     const handleClickEdit = (e) =>{
         console.log("hello")
         e.preventDefault()
         setOpen(!open)
+        if (open) {
+            setMode("edit")
+        } else{
+            setMode("show")
+        }
     }
 
     const button_props ={
@@ -24,14 +24,17 @@ const UserPage = (props) => {
         type: "button",
         onClick: handleClickEdit
     }
+
+    props.button_props_cancel.onClick = handleClickEdit
+
     return (
         <div className="container">
             <Card>
                 <Card.Body>
                 <Card.Title>User Information</Card.Title>
-                <Card.Text>
-                    {user.username}
-                </Card.Text>
+                
+                <SignUpForm {...props}/>
+                
                 {
                     open &&
                     <Button 
