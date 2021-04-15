@@ -200,25 +200,26 @@ const UserState = (props) => {
         setIsLoading();
         let res;
         try {
-            res = await fetch(`${url}/user`, {
-                method: "DELETE",
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
 
-        if (res.status === 200){
             const status_message = {
                 status: "Success",
                 message: "User account deleted."
             }
 
             logOutUser(cb, status_message)
+            
+            res = await fetch(`${url}/user`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        } else {
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (res.status !== 200){
             const status_message = {
                 status: "Error",
                 message: "User account deletion failed."

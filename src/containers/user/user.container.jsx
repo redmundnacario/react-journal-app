@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import AlertContext from '../../context/alert/alertContext'
 import UserContext from '../../context/user/userContext'
+import ModalContext from '../../context/modal/modalContext'
 
 import UserPage from '../../components/pages/user/user.page.component'
 
@@ -12,8 +13,11 @@ const UserContainer = () => {
     // contexts
     const userContext = useContext(UserContext)
     const alertContext = useContext(AlertContext)
+    const modalContext = useContext(ModalContext)
 
     const {user, token, isLoading, updateUserAccount} = userContext
+    const {showModal} = modalContext
+
     // local components
     const [email, setEmail] = useState(null)
     const [username, setUsername] = useState(null)
@@ -46,6 +50,7 @@ const UserContainer = () => {
         }
         return data
     }
+    // save button callack
     const handleSubmit = (e, data) =>{
         e.preventDefault()
         data = cleanData(data)
@@ -63,6 +68,23 @@ const UserContainer = () => {
         setOpen(!open)
     }
 
+    // edit and cancel-edit button callback
+    const handleClickEdit = (e) =>{
+        e.preventDefault()
+        setOpen(!open)
+        if (open) {
+            setMode("edit")
+        } else{
+            setMode("show")
+        }
+    }
+    // delete button callback
+    const handleClickDelete = (e) => {
+        e.preventDefault()
+        showModal({modalBody: "DeleteUser"})
+    }
+
+    // Inside edit
     const button_props ={
         variant: "primary",
         text: "Save",
@@ -72,7 +94,23 @@ const UserContainer = () => {
     const button_props_cancel ={
         variant: "secondary",
         text: "Cancel",
-        type: "button"
+        type: "button",
+        onClick: handleClickEdit
+    }
+
+    // Inside user page
+    const button_props_edit ={
+        variant: "primary",
+        text: "Edit Account",
+        type: "button",
+        onClick: handleClickEdit
+    }
+
+    const button_props_delete = {
+        variant: "danger",
+        text: "Delete Account",
+        type: "button",
+        onClick: handleClickDelete
     }
 
     let props = {
@@ -88,6 +126,8 @@ const UserContainer = () => {
         handleSubmit,
         button_props,
         button_props_cancel,
+        button_props_edit,
+        button_props_delete,
         mode,
         setMode,
         open,
